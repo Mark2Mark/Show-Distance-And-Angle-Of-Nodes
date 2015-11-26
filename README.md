@@ -10,7 +10,10 @@ Download or clone the whole `Glyphsapp-Plugins`repo (it will contain more plugin
 
 ### Examples
 
-Coming up …
+![Show Distance And Angle Demo](https://raw.githubusercontent.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_01.png?raw=true "Show Distance And Angle")
+
+![Show Distance And Angle Demo](https://raw.githubusercontent.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_02.png?raw=true "Show Distance And Angle")
+
 
 ### Known issues
 
