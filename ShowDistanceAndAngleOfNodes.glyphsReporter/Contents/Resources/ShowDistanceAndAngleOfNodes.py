@@ -15,10 +15,11 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import objc
-from Foundation import *
+# from Foundation import *
 from AppKit import *
 import sys, os, re
 import math
+import traceback
 # import cmath
 
 MainBundle = NSBundle.mainBundle()
@@ -123,17 +124,34 @@ class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
 				### SO THE SAME PERCIEVED ANGLE WILL HAVE THE SAME VALUE
 				### IGNORING PATH DIRECTION
 				if -180 < degs < -90:
-					degs = degs+180
+					degs = degs + 180
 				elif degs == 180:
 					degs = 0
 				elif degs == -90:
 					degs = 90
 
-				### math.floor() to avoid jumpin position of badge & text
-				self.drawCoveringBadge( math.floor(xAverage) - badgeWidth/2, math.floor(yAverage) - badgeHeight, badgeWidth, badgeHeight*2, badgeRadius, badgeAlpha)
+				try:
+					### math.floor() to avoid jumpin position of badge & text
+					badgeOffsetX = 0
+					badgeOffsetY = 0
+					if degs < 45:
+						badgeOffsetX = 0
+						badgeOffsetY = 60 / self.getScale() - badgeHeight
+					if degs >= 45:
+						badgeOffsetX = 20 / self.getScale() + badgeWidth/2
+						badgeOffsetY = 0
+					if degs >= 145:
+						badgeOffsetX = 20 / self.getScale() + badgeWidth/2
+						badgeOffsetY = 60 / self.getScale() - badgeHeight										
+					cpX, cpY = math.floor(xAverage), math.floor(yAverage) # Center Position X, Y
+					
+					self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight - badgeOffsetY, badgeWidth, badgeHeight * 2, badgeRadius, badgeAlpha)
 
-				### is this one slowing down?
-				self.drawTextAtPoint( u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ), (math.floor(xAverage), math.floor(yAverage) + shiftY), fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( *badgeFontColor) )
+					### is this one slowing down?
+					self.drawTextAtPoint( u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ), (cpX - badgeOffsetX, cpY + shiftY - badgeOffsetY), fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( *badgeFontColor) )
+
+				except:
+					self.logToConsole(str(traceback.format_exc()))
 
 			else:
 				pass
