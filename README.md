@@ -24,15 +24,15 @@ When ever you need it, toggle `Show * Distance and Angle` from the view menu.
 ![Show Distance And Angle Demo](https://raw.githubusercontent.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_02.png?raw=true "Show Distance And Angle")
 
 
-#### Known issues
+##### Known issues
 
 - Still trying to find the optimal location of the label.
 
-#### Pull Requests
+##### Pull Requests
 
 Feel free to comment or pull requests for any improvements.
 
-#### License
+##### License
 
 Copyright 2015 [Mark Frömberg](http://www.markfromberg.com/) *@DeutschMark*
 
