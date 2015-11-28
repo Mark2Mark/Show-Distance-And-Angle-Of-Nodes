@@ -1,12 +1,22 @@
-# Show Distance And Angle Of 2 Selected Elements
+# Show Distance And Angle
 
 ## Plugin for Glyphsapp
 
-This is a Plugin for the [Glyphs font editor](http://glyphsapp.com/). It shows the direct distance of two selected Elements (Nodes, Anchors, Components) and their angle. This comes in very handy when comparing not only (angled) flanks of paths but also italic angle continuity. The times of temporaryly created guidelines are passé.
+This is a Plugin for the [Glyphs font editor](http://glyphsapp.com/).  
+It shows the direct distance of two selected elements (`Nodes, Anchors, Components`) and their angle. The times of temporaryly created guidelines are passé.
+
+### Install
+
+1. Download or clone this repository.
+2. Either:  
+   Double click the `.glyphsReporter` file and confirm the dialogue in Glyphsapp to install.  
+   Or:  
+   Copy the `.glyphsReporter` into your Glyphsapp Plugins folder (eg. `/Library/Application\ Support/Glyphs/Plugins`). You can use subfolders (e.g. to sort plugins by author) there.
+3. Restart Glyphs.
 
 ### How to use
 
-Download or clone the whole `Glyphsapp-Plugins`repo (it will contain more plugins soon). Double click the .reporter file and confirm the dialogue in Glyphsapp to install. Or copy the `ShowNodeCount.glyphsReporter` into your Glyphsapp Plugins folder (eg. `/Library/Application\ Support/Glyphs/Plugins`), restart Glyphs and when ever you need it, toggle `Show Rotated` from the view menu.
+When ever you need it, toggle `Show * Distance and Angle` from the view menu.
 
 ### Examples
 
@@ -15,15 +25,15 @@ Download or clone the whole `Glyphsapp-Plugins`repo (it will contain more plugin
 ![Show Distance And Angle Demo](https://raw.githubusercontent.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_02.png?raw=true "Show Distance And Angle")
 
 
-### Known issues
+#### Known issues
 
-- None so far
+- Still trying to find the optimal location of the label.
 
-### Pull Requests
+#### Pull Requests
 
 Feel free to comment or pull requests for any improvements.
 
-### License
+#### License
 
 Copyright 2015 [Mark Frömberg](http://www.markfromberg.com/) *@DeutschMark*
 
