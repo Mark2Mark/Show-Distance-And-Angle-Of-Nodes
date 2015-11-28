@@ -1,6 +1,6 @@
 # Show Distance And Angle
 
-*This is a Plugin for the [Glyphs font editor](http://glyphsapp.com/).*  
+*This is a plugin for the [Glyphs font editor](http://glyphsapp.com/).*  
 
 It shows the direct distance of two selected elements (`Nodes, Anchors, Components`) and their angle. The times of temporaryly created guidelines are passé.
 
