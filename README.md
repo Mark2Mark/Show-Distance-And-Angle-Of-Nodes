@@ -19,9 +19,9 @@ When ever you need it, toggle `Show * Distance and Angle` from the view menu.
 
 ### Examples
 
-![Show Distance And Angle Demo](https://raw.githubusercontent.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_01.png?raw=true "Show Distance And Angle")
+![Show Distance And Angle Demo](https://raw.githubusercontent.com/Mark2Mark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_01.png?raw=true "Show Distance And Angle")
 
-![Show Distance And Angle Demo](https://raw.githubusercontent.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_02.png?raw=true "Show Distance And Angle")
+![Show Distance And Angle Demo](https://raw.githubusercontent.com/Mark2Mark/Show-Distance-And-Angle-Of-Nodes/master/Screenshots/Distance_And_Angle_02.png?raw=true "Show Distance And Angle")
 
 
 ##### Known issues
@@ -34,7 +34,7 @@ Feel free to comment or pull requests for any improvements.
 
 ##### License
 
-Copyright 2015 [Mark Frömberg](http://www.markfromberg.com/) *@DeutschMark*
+Copyright 2015 [Mark Frömberg](http://www.markfromberg.com/) *@Mark2Mark*
 
 Made possible with the GlyphsSDK by Georg Seifert (@schriftgestalt) and Rainer Erich Scheichelbauer (@mekkablue).
 
