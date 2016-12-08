@@ -47,7 +47,7 @@ class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
 	
 	def title( self ):
 		try:
-			return "* Distance & Angle"
+			return "Distance & Angle"
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
 	
