@@ -75,50 +75,37 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 				
 				scale = self.getScale()
 				
-				try:
-					### math.floor() to avoid jumpin position of badge & text
-					
-					
-					string = NSString.stringWithString_(u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ))
-					attributes = NSString.drawTextAttributes_(NSColor.whiteColor())
-					textSize = string.sizeWithAttributes_(attributes)
-					
-					### BADGE
-					badgeWidth = textSize.width + 8
-					badgeHeight = textSize.height + 4
-					badgeRadius = 5
-					
+				string = NSString.stringWithString_(u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ))
+				attributes = NSString.drawTextAttributes_(NSColor.whiteColor())
+				textSize = string.sizeWithAttributes_(attributes)
+				
+				### BADGE
+				badgeWidth = textSize.width + 8
+				badgeHeight = textSize.height + 4
+				badgeRadius = 5
+				
+				badgeOffsetX = 0
+				badgeOffsetY = 0
+				if degs < 45:
 					badgeOffsetX = 0
+					badgeOffsetY = 60 - badgeHeight
+				if degs >= 45:
+					badgeOffsetX = 20 + badgeWidth/2
 					badgeOffsetY = 0
-					if degs < 45:
-						badgeOffsetX = 0
-						badgeOffsetY = 60 - badgeHeight
-					if degs >= 45:
-						badgeOffsetX = 20 + badgeWidth/2
-						badgeOffsetY = 0
-					if degs >= 145:
-						badgeOffsetX = 20 + badgeWidth/2
-						badgeOffsetY = 60 - badgeHeight
-					
-					cpX, cpY = math.floor(xAverage), math.floor(yAverage) # Center Position X, Y
-					
-					glyphEditView = self.controller.graphicView()
-					origin = glyphEditView.cachedPositionAtIndex_(glyphEditView.selectedLayerRange().location)
-					cpX = cpX * scale + origin[0]
-					cpY = cpY * scale + origin[1]
-					
-					
-					print("__cpX, cpY", cpX, cpY, badgeOffsetX, badgeOffsetY)
-					self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius, badgeAlpha)
-
-					### is this one slowing down?
-					self.drawText( string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
-
-				except:
-					self.logToConsole(str(traceback.format_exc()))
-
-			else:
-				pass
+				if degs >= 145:
+					badgeOffsetX = 20 + badgeWidth/2
+					badgeOffsetY = 60 - badgeHeight
+				
+				cpX, cpY = math.floor(xAverage), math.floor(yAverage) # Center Position X, Y
+				
+				glyphEditView = self.controller.graphicView()
+				origin = glyphEditView.cachedPositionAtIndex_(glyphEditView.selectedLayerRange().location)
+				cpX = cpX * scale + origin[0]
+				cpY = cpY * scale + origin[1]
+				
+				self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius, badgeAlpha)
+				### is this one slowing down?
+				self.drawText( string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
 		except Exception, e:
 			self.logToConsole(e)
 			pass
