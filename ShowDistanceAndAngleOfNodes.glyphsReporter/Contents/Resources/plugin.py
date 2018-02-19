@@ -16,6 +16,7 @@
 import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
+from Foundation import NSString
 import sys, os, re
 import math
 import traceback
@@ -24,7 +25,7 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 	def settings(self):
 		self.menuName = "Distance & Angle"
 
-	def foreground(self, layer):
+	def foregroundInViewCoords(self, layer):
 		try:
 			self.drawNodeDistanceText( layer )
 		except Exception as e:
@@ -51,29 +52,10 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 				xAverage = x1 + (x2-x1) * t
 				yAverage = y1 + (y2-y1) * t
 				dist = math.hypot(x2 - x1, y2 - y1)
-
-				### BADGE
-				badgeWidth = 11 * len(str(round(dist))) / self.getScale()
-				badgeHeight = 23 / self.getScale()
-				badgeRadius = 8 / self.getScale()
 				
 				### HACK TO KEEP THE TEXT IN ITS BADGE FOR ALL ZOOMS
 				badgeAlpha = .75
-				badgeFontColor = 1, 1, 1, 1
-				if self.getScale() >= 6:
-					shiftY = - 0.5
-				if self.getScale() >= 15:
-					badgeHeight = badgeHeight*1.5
-					badgeWidth = badgeWidth*1.5
-				if self.getScale() >= 20:
-					shiftY = - 1
-				if self.getScale() >= 25:
-					badgeAlpha = 0
-					badgeFontColor = 0, .5, 1, .75
-				else:
-					shiftY = 0
-
-
+				
 				'''
 				ANGLE
 				'''
@@ -90,26 +72,47 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 					degs = 0
 				elif degs == -90:
 					degs = 90
-
+				
+				scale = self.getScale()
+				
 				try:
 					### math.floor() to avoid jumpin position of badge & text
+					
+					
+					string = NSString.stringWithString_(u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ))
+					attributes = NSString.drawTextAttributes_(NSColor.whiteColor())
+					textSize = string.sizeWithAttributes_(attributes)
+					
+					### BADGE
+					badgeWidth = textSize.width + 8
+					badgeHeight = textSize.height + 4
+					badgeRadius = 5
+					
 					badgeOffsetX = 0
 					badgeOffsetY = 0
 					if degs < 45:
 						badgeOffsetX = 0
-						badgeOffsetY = 60 / self.getScale() - badgeHeight
+						badgeOffsetY = 60 - badgeHeight
 					if degs >= 45:
-						badgeOffsetX = 20 / self.getScale() + badgeWidth/2
+						badgeOffsetX = 20 + badgeWidth/2
 						badgeOffsetY = 0
 					if degs >= 145:
-						badgeOffsetX = 20 / self.getScale() + badgeWidth/2
-						badgeOffsetY = 60 / self.getScale() - badgeHeight
+						badgeOffsetX = 20 + badgeWidth/2
+						badgeOffsetY = 60 - badgeHeight
+					
 					cpX, cpY = math.floor(xAverage), math.floor(yAverage) # Center Position X, Y
 					
-					self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight - badgeOffsetY, badgeWidth, badgeHeight * 2, badgeRadius, badgeAlpha)
+					glyphEditView = self.controller.graphicView()
+					origin = glyphEditView.cachedPositionAtIndex_(glyphEditView.selectedLayerRange().location)
+					cpX = cpX * scale + origin[0]
+					cpY = cpY * scale + origin[1]
+					
+					
+					print("__cpX, cpY", cpX, cpY, badgeOffsetX, badgeOffsetY)
+					self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius, badgeAlpha)
 
 					### is this one slowing down?
-					self.drawText( u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ), (cpX - badgeOffsetX, cpY + shiftY - badgeOffsetY), fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( *badgeFontColor) )
+					self.drawText( string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
 
 				except:
 					self.logToConsole(str(traceback.format_exc()))
@@ -119,17 +122,11 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 		except Exception, e:
 			self.logToConsole(e)
 			pass
-	@objc.python_method
-	def drawText( self, text, textPosition, fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( 1, 1, 1, 1 ) ):
+	
+	def drawText( self, text, textPosition, fontColor=NSColor.whiteColor() ):
 		try:
-			glyphEditView = self.controller.graphicView()
-			currentZoom = self.getScale()
-			fontAttributes = { 
-				NSFontAttributeName: NSFont.labelFontOfSize_( fontSize/currentZoom ),
-				NSForegroundColorAttributeName: fontColor }
-			displayText = NSAttributedString.alloc().initWithString_attributes_( text, fontAttributes )
-			textAlignment = 4 # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
-			glyphEditView.drawText_atPoint_alignment_( displayText, textPosition, textAlignment )
+			string = NSString.stringWithString_(text)
+			string.drawAtPoint_color_alignment_(textPosition, fontColor, 4)
 		except Exception as e:
 			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
 	
@@ -150,11 +147,7 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 			return 7.0
 
 	def getScale( self ):
-		try:
-			return self.controller.graphicView().scale()
-		except:
-			self.logToConsole( "Scale defaulting to 1.0" )
-			return 1.0
+		return self._scale
 	
 	def setController_( self, Controller ):
 		try:
