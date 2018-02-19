@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # encoding: utf-8
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -15,57 +14,19 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import objc
-# from Foundation import *
-from AppKit import *
+from GlyphsApp import *
+from GlyphsApp.plugins import *
 import sys, os, re
 import math
 import traceback
-# import cmath
 
-MainBundle = NSBundle.mainBundle()
-path = MainBundle.bundlePath() + "/Contents/Scripts"
-if not path in sys.path:
-	sys.path.append( path )
+class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
+	def settings(self):
+		self.menuName = "Distance & Angle"
 
-import GlyphsApp
-
-GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
-
-class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
-	
-	def init( self ):
+	def foreground(self, layer):
 		try:
-			return self
-		except Exception as e:
-			self.logToConsole( "init: %s" % str(e) )
-	
-	def interfaceVersion( self ):
-		try:
-			return 1
-		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
-	
-	def title( self ):
-		try:
-			return "Distance & Angle"
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
-	
-	def keyEquivalent( self ):
-		try:
-			return None
-		except Exception as e:
-			self.logToConsole( "keyEquivalent: %s" % str(e) )
-	
-	def modifierMask( self ):
-		try:
-			return 0
-		except Exception as e:
-			self.logToConsole( "modifierMask: %s" % str(e) )
-	
-	def drawForegroundForLayer_( self, Layer ):
-		try:
-			self.drawNodeDistanceText( Layer )
+			self.drawNodeDistanceText( layer )
 		except Exception as e:
 			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
 
@@ -123,16 +84,12 @@ class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
 				### CLEAN UP THE DIRECTIONS, LIMIT ANGLES BETWEEN 0 AND 180
 				### SO THE SAME PERCIEVED ANGLE WILL HAVE THE SAME VALUE
 				### IGNORING PATH DIRECTION
-				# if -180 < degs < -90:
-				# 	degs = degs + 180
-				# elif degs == 180:
-				# 	degs = 0
-				# elif degs == -90:
-				# 	degs = 90
-
-								
-				degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
-
+				if -180 < degs < -90:
+					degs = degs + 180
+				elif degs == 180:
+					degs = 0
+				elif degs == -90:
+					degs = 90
 
 				try:
 					### math.floor() to avoid jumpin position of badge & text
@@ -146,13 +103,13 @@ class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
 						badgeOffsetY = 0
 					if degs >= 145:
 						badgeOffsetX = 20 / self.getScale() + badgeWidth/2
-						badgeOffsetY = 60 / self.getScale() - badgeHeight										
+						badgeOffsetY = 60 / self.getScale() - badgeHeight
 					cpX, cpY = math.floor(xAverage), math.floor(yAverage) # Center Position X, Y
 					
 					self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight - badgeOffsetY, badgeWidth, badgeHeight * 2, badgeRadius, badgeAlpha)
 
 					### is this one slowing down?
-					self.drawTextAtPoint( u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ), (cpX - badgeOffsetX, cpY + shiftY - badgeOffsetY), fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( *badgeFontColor) )
+					self.drawText( u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ), (cpX - badgeOffsetX, cpY + shiftY - badgeOffsetY), fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( *badgeFontColor) )
 
 				except:
 					self.logToConsole(str(traceback.format_exc()))
@@ -162,20 +119,8 @@ class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
 		except Exception, e:
 			self.logToConsole(e)
 			pass
-
-	def drawBackgroundForLayer_( self, Layer ):
-		try:
-			pass
-		except Exception as e:
-			self.logToConsole( "drawBackgroundForLayer_: %s" % str(e) )
-
-	def drawBackgroundForInactiveLayer_( self, Layer ):
-		try:
-			pass
-		except Exception as e:
-			self.logToConsole( "drawBackgroundForInactiveLayer_: %s" % str(e) )
-	
-	def drawTextAtPoint( self, text, textPosition, fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( 1, 1, 1, 1 ) ):
+	@objc.python_method
+	def drawText( self, text, textPosition, fontSize=10.0, fontColor=NSColor.colorWithCalibratedRed_green_blue_alpha_( 1, 1, 1, 1 ) ):
 		try:
 			glyphEditView = self.controller.graphicView()
 			currentZoom = self.getScale()
@@ -220,3 +165,7 @@ class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
 	def logToConsole( self, message ):
 		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
 		NSLog( myLog )
+
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
