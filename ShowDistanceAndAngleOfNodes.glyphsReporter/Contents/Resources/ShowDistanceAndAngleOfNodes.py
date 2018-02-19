@@ -123,12 +123,16 @@ class ShowDistanceAndAngleOfNodes ( NSObject, GlyphsReporterProtocol ):
 				### CLEAN UP THE DIRECTIONS, LIMIT ANGLES BETWEEN 0 AND 180
 				### SO THE SAME PERCIEVED ANGLE WILL HAVE THE SAME VALUE
 				### IGNORING PATH DIRECTION
-				if -180 < degs < -90:
-					degs = degs + 180
-				elif degs == 180:
-					degs = 0
-				elif degs == -90:
-					degs = 90
+				# if -180 < degs < -90:
+				# 	degs = degs + 180
+				# elif degs == 180:
+				# 	degs = 0
+				# elif degs == -90:
+				# 	degs = 90
+
+								
+				degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
+
 
 				try:
 					### math.floor() to avoid jumpin position of badge & text
