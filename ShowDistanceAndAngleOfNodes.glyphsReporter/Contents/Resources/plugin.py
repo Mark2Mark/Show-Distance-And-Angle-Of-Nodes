@@ -21,6 +21,14 @@ import sys, os, re
 import math
 import traceback
 
+def UnitVectorFromTo(B, A):
+	A.x -= B.x
+	A.y -= B.y
+	Length = math.sqrt((A.x * A.x) + (A.y * A.y))
+	A.x /= Length
+	A.y /= Length
+	return A
+
 class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 	def settings(self):
 		self.menuName = "Distance & Angle"
@@ -84,19 +92,12 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 				badgeHeight = textSize.height + 4
 				badgeRadius = 5
 				
-				badgeOffsetX = 0
-				badgeOffsetY = 0
-				if degs < 45:
-					badgeOffsetX = 0
-					badgeOffsetY = 60 - badgeHeight
-				if degs >= 45:
-					badgeOffsetX = 20 + badgeWidth/2
-					badgeOffsetY = 0
-				if degs >= 145:
-					badgeOffsetX = 20 + badgeWidth/2
-					badgeOffsetY = 60 - badgeHeight
+				unitVector = UnitVectorFromTo(NSPoint(x1, y1), NSPoint(x2, y2))
 				
-				cpX, cpY = math.floor(xAverage), math.floor(yAverage) # Center Position X, Y
+				badgeOffsetX = -unitVector.y * (badgeWidth / 2 + 4)
+				badgeOffsetY = unitVector.x * (badgeHeight / 2 + 4)
+				
+				cpX, cpY = math.floor(xAverage), math.floor(yAverage)
 				
 				glyphEditView = self.controller.graphicView()
 				origin = glyphEditView.cachedPositionAtIndex_(glyphEditView.selectedLayerRange().location)
