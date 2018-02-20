@@ -16,11 +16,9 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 from Foundation import NSString
-import sys, os, re
 import math
 import traceback
 from AppKit import NSColor, NSBezierPath
