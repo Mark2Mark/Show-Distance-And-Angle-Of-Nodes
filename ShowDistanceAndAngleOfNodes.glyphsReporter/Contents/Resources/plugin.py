@@ -146,8 +146,14 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				# Angle
 				#======
 				# print x2 >= x1 or y2 >= y1
+				switch = (x1, y1) >= (x2, y2)
 
-				dx, dy = x2 - x1, y2 - y1
+				
+				if switch == True and self.angleAbsolute == False:
+					dx, dy = x1 - x2, y1 - y2
+					#print "switch"
+				else:
+					dx, dy = x2 - x1, y2 - y1
 				rads = math.atan2( dy, dx )
 				degs = math.degrees( rads )
 
