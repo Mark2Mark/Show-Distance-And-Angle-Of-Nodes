@@ -156,12 +156,12 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				# elif degs == -90:
 				# 	degs = 90
 
-				# print "a", degs
+				
 				if self.angleAbsolute == True:
 					degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
 				if self.angleAbsolute == False:
 					degs = abs(degs) % 90
-				# print "b", degs
+				
 
 
 				scale = self.getScale()		
