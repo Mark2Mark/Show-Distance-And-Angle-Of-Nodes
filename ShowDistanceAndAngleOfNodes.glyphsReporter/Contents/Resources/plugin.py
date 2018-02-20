@@ -132,7 +132,6 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			myPath.moveToPoint_( (x1, y1) )
 			myPath.lineToPoint_( (x2, y2) )
 			myPath.setLineWidth_( strokeWidth/self.getScale() )
-			#myPath.setLineDash_count_phase_(2, 2, 0.0)
 			NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
 			myPath.stroke()
 		except:
@@ -151,7 +150,6 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				xAverage = x1 + (x2-x1) * t
 				yAverage = y1 + (y2-y1) * t
 				dist = math.hypot(x2 - x1, y2 - y1)
-				
 				
 
 				# Angle
@@ -215,7 +213,7 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			print traceback.format_exc()
 
 
-	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
+	def needsExtraMainOutlineDrawingForInactiveLayer_( self, layer ):
 		return True
 
 
@@ -230,7 +228,10 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 
 
 	def getScale( self ):
-		return self._scale
+		try:
+			return self._scale
+		except:
+			return 1 # Attention, just for debugging!
 	
 	
 	def logToConsole( self, message ):
