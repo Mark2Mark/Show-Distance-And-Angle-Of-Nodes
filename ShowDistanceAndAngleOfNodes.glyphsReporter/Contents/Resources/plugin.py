@@ -38,7 +38,7 @@ COLOR = 0, .6, 1, 0.75
 
 class ShowDistanceAndAngle ( ReporterPlugin ):
 	def settings(self):
-		self.menuName = "Distance & Angle"
+		self.menuName = u"Distance & Angle"
 		self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
 		self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
 
@@ -63,7 +63,6 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			self.thisMenuTitle,
 			{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
 		]
-		
 		self.RefreshView()
 		self.SavePreferences()
 
@@ -89,7 +88,7 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 		try:
 			self.drawNodeDistanceText( layer )
 		except Exception as e:
-			self.logToConsole( "foregroundInViewCoords: %s" % str(e) )
+			self.logToConsole( "ShowDistanceAndAngle: foregroundInViewCoords: %s" % str(e) )
 
 
 	def background(self, layer):
@@ -103,7 +102,7 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				x2, y2 = selection[1].x, selection[1].y
 				self.drawLine((x1, y1), (x2, y2))
 		except Exception as e:
-			self.logToConsole( "background: %s" % str(e) )
+			self.logToConsole( "ShowDistanceAndAngle: background: %s" % str(e) )
 
 
 
@@ -207,7 +206,7 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			string = NSString.stringWithString_(text)
 			string.drawAtPoint_color_alignment_(textPosition, fontColor, 4)
 		except Exception as e:
-			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
+			self.logToConsole( "ShowDistanceAndAngle: drawText: %s" % str(e) )
 
 
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
