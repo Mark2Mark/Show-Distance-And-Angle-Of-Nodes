@@ -41,6 +41,7 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 	def settings(self):
 		try:
 			self.menuName = u"Distance & Angle"
+			print self.menuName, "Version 1.0.5"
 			self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
 			self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
 
