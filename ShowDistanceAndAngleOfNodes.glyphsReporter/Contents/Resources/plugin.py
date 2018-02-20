@@ -7,6 +7,9 @@
 # --> Mark Froemberg aka DeutschMark @ GitHub
 # --> www.markfromberg.com
 #
+# - Note:
+# 		+ About Relative/Absolute/Shortest angle: https://forum.glyphsapp.com/t/show-distance-and-angle/8176/17
+#
 # - ToDo
 #	- 
 #
@@ -21,6 +24,7 @@ import sys, os, re
 import math
 import traceback
 
+
 def UnitVectorFromTo(B, A):
 	A.x -= B.x
 	A.y -= B.y
@@ -29,9 +33,56 @@ def UnitVectorFromTo(B, A):
 	A.y /= Length
 	return A
 
-class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
+
+class ShowDistanceAndAngle ( ReporterPlugin ):
 	def settings(self):
 		self.menuName = "Distance & Angle"
+		self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
+		self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
+
+		self.angleAbsolute = True
+		if not self.LoadPreferences( ):
+			print "Error: Could not load preferences. Will resort to defaults."
+
+		self.angleStyles = {
+			"True" : u"= Relative Angle",
+			"False" : u"= Shortest Angle", # Absolute = % 360
+		}
+
+		self.generalContextMenus = [
+			self.thisMenuTitle,
+			{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
+		]
+		
+
+	def toggleAngleStyle(self):
+		self.angleAbsolute = not self.angleAbsolute
+		self.generalContextMenus = [
+			self.thisMenuTitle,
+			{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
+		]
+		
+		self.RefreshView()
+		self.SavePreferences()
+
+
+	def SavePreferences( self ):
+		Glyphs.defaults[ "%s.angleStyle" % self.vID ] = self.angleAbsolute#self.w.hTarget.get()
+
+	def LoadPreferences( self ):
+		Glyphs.registerDefault(  "%s.angleStyle" % self.vID, True ) # Default
+		try:
+			self.angleAbsolute = Glyphs.defaults[ "%s.angleStyle" % self.vID ]
+		except:
+			return False
+		
+		return True
+
+
+
+
+
+
 
 	def foregroundInViewCoords(self, layer):
 		try:
@@ -49,6 +100,7 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 	
 	def drawNodeDistanceText( self, Layer ):
 		try:
+			badgeAlpha = .75
 			try:
 				selection = Layer.selection
 			except:
@@ -61,33 +113,28 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 				yAverage = y1 + (y2-y1) * t
 				dist = math.hypot(x2 - x1, y2 - y1)
 				
-				### HACK TO KEEP THE TEXT IN ITS BADGE FOR ALL ZOOMS
-				badgeAlpha = .75
 				
-				'''
-				ANGLE
-				'''
+
+				# Angle
+				#======
 				dx, dy = x2 - x1, y2 - y1
 				rads = math.atan2( dy, dx )
 				degs = math.degrees( rads )
 
-				### CLEAN UP THE DIRECTIONS, LIMIT ANGLES BETWEEN 0 AND 180
-				### SO THE SAME PERCIEVED ANGLE WILL HAVE THE SAME VALUE
-				### IGNORING PATH DIRECTION
-				if -180 < degs < -90:
-					degs = degs + 180
-				elif degs == 180:
-					degs = 0
-				elif degs == -90:
-					degs = 90
-				
-				scale = self.getScale()
-				
+
+				if self.angleAbsolute == True:
+					degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
+				elif self.angleAbsolute == False:
+					degs = degs % 90
+
+
+				scale = self.getScale()		
 				string = NSString.stringWithString_(u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ))
 				attributes = NSString.drawTextAttributes_(NSColor.whiteColor())
 				textSize = string.sizeWithAttributes_(attributes)
 				
-				### BADGE
+				# Badge
+				#======
 				badgeWidth = textSize.width + 8
 				badgeHeight = textSize.height + 4
 				badgeRadius = 5
@@ -117,31 +164,25 @@ class ShowDistanceAndAngleOfNodes ( ReporterPlugin ):
 			string.drawAtPoint_color_alignment_(textPosition, fontColor, 4)
 		except Exception as e:
 			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
-	
+
+
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
 		return True
-	
-	def getHandleSize( self ):
+
+
+	def RefreshView(self):
 		try:
-			Selected = NSUserDefaults.standardUserDefaults().integerForKey_( "GSHandleSize" )
-			if Selected == 0:
-				return 5.0
-			elif Selected == 2:
-				return 10.0
-			else:
-				return 7.0 # Regular
-		except Exception as e:
-			self.logToConsole( "getHandleSize: HandleSize defaulting to 7.0. %s" % str(e) )
-			return 7.0
+			Glyphs = NSApplication.sharedApplication()
+			currentTabView = Glyphs.font.currentTab
+			if currentTabView:
+				currentTabView.graphicView().setNeedsDisplay_(True)
+		except:
+			pass
+
 
 	def getScale( self ):
 		return self._scale
 	
-	def setController_( self, Controller ):
-		try:
-			self.controller = Controller
-		except Exception as e:
-			self.logToConsole( "Could not set controller" )
 	
 	def logToConsole( self, message ):
 		myLog = "Show %s plugin:\n%s" % ( self.title(), message )

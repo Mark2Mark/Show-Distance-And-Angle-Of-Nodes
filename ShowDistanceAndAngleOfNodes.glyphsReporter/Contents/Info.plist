@@ -5,15 +5,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>ShowDistanceAndAngleOfNodes</string>
+	<string>ShowDistanceAndAngle</string>
 	<key>CFBundleExecutable</key>
 	<string>plugin</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.markfromberg.ShowDistanceAndAngleOfNodes</string>
+	<string>com.markfromberg.ShowDistanceAndAngle</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ShowDistanceAndAngleOfNodes</string>
+	<string>ShowDistanceAndAngle</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleVersion</key>
@@ -21,15 +21,15 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.4</string>
 	<key>UpdateFeedURL</key>
-	<string>https://raw.githubusercontent.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes/master/ShowDistanceAndAngleOfNodes.glyphsReporter/Contents/Info.plist</string>
+	<string></string>
 	<key>productPageURL</key>
-	<string>https://github.com/DeutschMark/Show-Distance-And-Angle-Of-Nodes</string>
+	<string></string>
 	<key>productReleaseNotes</key>
 	<string>Fix angle calculation</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright, by Mark Frömberg (@DeutschMark), 2015</string>
+	<string>Copyright, by Mark Frömberg (@mark2mark), 2015</string>
 	<key>NSPrincipalClass</key>
-	<string>ShowDistanceAndAngleOfNodes</string>
+	<string>ShowDistanceAndAngle</string>
 	<key>PyMainFileNames</key>
 	<array>
 		<string>../MacOS/main.py</string>
