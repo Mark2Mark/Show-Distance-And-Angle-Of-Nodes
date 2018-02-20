@@ -149,11 +149,19 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				rads = math.atan2( dy, dx )
 				degs = math.degrees( rads )
 
+				# if -180 < degs < -90:
+				# 	degs = degs + 180
+				# elif degs == 180:
+				# 	degs = 0
+				# elif degs == -90:
+				# 	degs = 90
 
+				# print "a", degs
 				if self.angleAbsolute == True:
 					degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
-				elif self.angleAbsolute == False:
-					degs = degs % 90
+				if self.angleAbsolute == False:
+					degs = abs(degs) % 90
+				# print "b", degs
 
 
 				scale = self.getScale()		
