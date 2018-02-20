@@ -23,6 +23,7 @@ from Foundation import NSString
 import sys, os, re
 import math
 import traceback
+from AppKit import NSColor, NSBezierPath
 
 
 def UnitVectorFromTo(B, A):
@@ -33,6 +34,7 @@ def UnitVectorFromTo(B, A):
 	A.y /= Length
 	return A
 
+COLOR = 0, .6, 1, 0.75
 
 class ShowDistanceAndAngle ( ReporterPlugin ):
 	def settings(self):
@@ -83,28 +85,54 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 
 
 
-
 	def foregroundInViewCoords(self, layer):
 		try:
 			self.drawNodeDistanceText( layer )
 		except Exception as e:
-			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
+			self.logToConsole( "foregroundInViewCoords: %s" % str(e) )
 
-	def drawCoveringBadge(self, x, y, width, height, radius, alpha):
+
+	def background(self, layer):
+		try:
+			try:
+				selection = layer.selection
+			except:
+				selection = layer.selection()
+			if len(selection) == 2:
+				x1, y1 = selection[0].x, selection[0].y
+				x2, y2 = selection[1].x, selection[1].y
+				self.drawLine((x1, y1), (x2, y2))
+		except Exception as e:
+			self.logToConsole( "background: %s" % str(e) )
+
+
+
+	def drawCoveringBadge(self, x, y, width, height, radius):
 		myPath = NSBezierPath.alloc().init()
-		NSColor.colorWithCalibratedRed_green_blue_alpha_( 0, .6, 1, alpha ).set()
+		NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
 		myRect = NSRect( ( x, y ), ( width, height ) )
 		thisPath = NSBezierPath.bezierPathWithRoundedRect_cornerRadius_( myRect, radius )
 		myPath.appendBezierPath_( thisPath )
 		myPath.fill()
-	
-	def drawNodeDistanceText( self, Layer ):
+
+	def drawLine(self, (x1, y1), (x2, y2), strokeWidth=1):
 		try:
-			badgeAlpha = .75
+			myPath = NSBezierPath.bezierPath()
+			myPath.moveToPoint_( (x1, y1) )
+			myPath.lineToPoint_( (x2, y2) )
+			myPath.setLineWidth_( strokeWidth/self.getScale() )
+			#myPath.setLineDash_count_phase_(2, 2, 0.0)
+			NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
+			myPath.stroke()
+		except:
+			print traceback.format_exc()
+
+	def drawNodeDistanceText( self, layer ):
+		try:
 			try:
-				selection = Layer.selection
+				selection = layer.selection
 			except:
-				selection = Layer.selection()
+				selection = layer.selection()
 			if len(selection) == 2:
 				x1, y1 = selection[0].x, selection[0].y
 				x2, y2 = selection[1].x, selection[1].y
@@ -151,11 +179,11 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				cpX = cpX * scale + origin[0]
 				cpY = cpY * scale + origin[1]
 				
-				self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius, badgeAlpha)
-				### is this one slowing down?
+				self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius)
 				self.drawText( string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
-		except Exception, e:
-			self.logToConsole(e)
+
+		except:
+			print traceback.format_exc()
 			pass
 	
 	def drawText( self, text, textPosition, fontColor=NSColor.whiteColor() ):
