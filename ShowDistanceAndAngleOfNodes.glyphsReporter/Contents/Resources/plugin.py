@@ -37,48 +37,58 @@ def UnitVectorFromTo(B, A):
 COLOR = 0, .6, 1, 0.75
 
 class ShowDistanceAndAngle ( ReporterPlugin ):
+
 	def settings(self):
-		self.menuName = u"Distance & Angle"
-		self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
-		self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
+		try:
+			self.menuName = u"Distance & Angle"
+			self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
+			self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
 
-		self.angleAbsolute = True
-		if not self.LoadPreferences( ):
-			print "Error: Could not load preferences. Will resort to defaults."
+			self.angleAbsolute = True
+			if not self.LoadPreferences( ):
+				print "Error: Could not load preferences. Will resort to defaults."
 
-		self.angleStyles = {
-			"True" : u"= Relative Angle",
-			"False" : u"= Shortest Angle", # Absolute = % 360
-		}
+			self.angleStyles = {
+				"True" : u"= Relative Angle",
+				"False" : u"= Shortest Angle", # Absolute = % 360
+			}
 
-		self.generalContextMenus = [
-			self.thisMenuTitle,
-			{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
-		]
-		
+			self.generalContextMenus = [
+				self.thisMenuTitle,
+				{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
+			]
+		except:
+			print traceback.format_exc()
 
 	def toggleAngleStyle(self):
-		self.angleAbsolute = not self.angleAbsolute
-		self.generalContextMenus = [
-			self.thisMenuTitle,
-			{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
-		]
-		self.RefreshView()
-		self.SavePreferences()
-
+		try:
+			self.angleAbsolute = not self.angleAbsolute
+			self.generalContextMenus = [
+				self.thisMenuTitle,
+				{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
+			]
+			self.RefreshView()
+			self.SavePreferences()
+		except:
+			print traceback.format_exc()
 
 	def SavePreferences( self ):
-		Glyphs.defaults[ "%s.angleStyle" % self.vID ] = self.angleAbsolute#self.w.hTarget.get()
+		try:
+			Glyphs.defaults[ "%s.angleStyle" % self.vID ] = self.angleAbsolute#self.w.hTarget.get()
+		except:
+			print traceback.format_exc()
 
 	def LoadPreferences( self ):
-		Glyphs.registerDefault(  "%s.angleStyle" % self.vID, True ) # Default
 		try:
-			self.angleAbsolute = Glyphs.defaults[ "%s.angleStyle" % self.vID ]
+			Glyphs.registerDefault(  "%s.angleStyle" % self.vID, True ) # Default
+			try:
+				self.angleAbsolute = Glyphs.defaults[ "%s.angleStyle" % self.vID ]
+			except:
+				return False
+			
+			return True
 		except:
-			return False
-		
-		return True
-
+			print traceback.format_exc()
 
 
 
@@ -87,8 +97,8 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 	def foregroundInViewCoords(self, layer):
 		try:
 			self.drawNodeDistanceText( layer )
-		except Exception as e:
-			self.logToConsole( "ShowDistanceAndAngle: foregroundInViewCoords: %s" % str(e) )
+		except:
+			print traceback.format_exc()
 
 
 	def background(self, layer):
@@ -101,18 +111,21 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				x1, y1 = selection[0].x, selection[0].y
 				x2, y2 = selection[1].x, selection[1].y
 				self.drawLine((x1, y1), (x2, y2))
-		except Exception as e:
-			self.logToConsole( "ShowDistanceAndAngle: background: %s" % str(e) )
+		except:
+			print traceback.format_exc()
 
 
 
 	def drawCoveringBadge(self, x, y, width, height, radius):
-		myPath = NSBezierPath.alloc().init()
-		NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
-		myRect = NSRect( ( x, y ), ( width, height ) )
-		thisPath = NSBezierPath.bezierPathWithRoundedRect_cornerRadius_( myRect, radius )
-		myPath.appendBezierPath_( thisPath )
-		myPath.fill()
+		try:
+			myPath = NSBezierPath.alloc().init()
+			NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
+			myRect = NSRect( ( x, y ), ( width, height ) )
+			thisPath = NSBezierPath.bezierPathWithRoundedRect_cornerRadius_( myRect, radius )
+			myPath.appendBezierPath_( thisPath )
+			myPath.fill()
+		except:
+			print traceback.format_exc()
 
 	def drawLine(self, (x1, y1), (x2, y2), strokeWidth=1):
 		try:
@@ -205,8 +218,8 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 		try:
 			string = NSString.stringWithString_(text)
 			string.drawAtPoint_color_alignment_(textPosition, fontColor, 4)
-		except Exception as e:
-			self.logToConsole( "ShowDistanceAndAngle: drawText: %s" % str(e) )
+		except:
+			print traceback.format_exc()
 
 
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
@@ -231,6 +244,6 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
 		NSLog( myLog )
 
-	def __file__(self):
-		"""Please leave this method unchanged"""
-		return __file__
+	# def __file__(self):
+	# 	"""Please leave this method unchanged"""
+	# 	return __file__
