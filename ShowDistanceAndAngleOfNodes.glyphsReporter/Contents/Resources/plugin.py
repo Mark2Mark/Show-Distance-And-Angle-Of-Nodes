@@ -145,6 +145,8 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 
 				# Angle
 				#======
+				# print x2 >= x1 or y2 >= y1
+
 				dx, dy = x2 - x1, y2 - y1
 				rads = math.atan2( dy, dx )
 				degs = math.degrees( rads )
