@@ -194,7 +194,11 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				cpX, cpY = math.floor(xAverage), math.floor(yAverage)
 				
 				glyphEditView = self.controller.graphicView()
-				origin = glyphEditView.cachedPositionAtIndex_(glyphEditView.selectedLayerRange().location)
+				try:
+					selection = glyphEditView.selectedLayerRange()
+				except:
+					selection = glyphEditView.textStorage().selectedRange()
+				origin = glyphEditView.cachedPositionAtIndex_(selection.location)
 				cpX = cpX * scale + origin[0]
 				cpY = cpY * scale + origin[1]
 				
