@@ -19,9 +19,7 @@ When ever you need it, toggle `Show * Distance and Angle` from the view menu.
 
 ### Examples
 
-![Show Distance And Angle Demo](https://github.com/Mark2Mark/Show-Distance-And-Angle-Of-Nodes/blob/master/Images/Distance_And_Angle_01.png "Show Distance And Angle")
-
-![Show Distance And Angle Demo](https://github.com/Mark2Mark/Show-Distance-And-Angle-Of-Nodes/blob/master/Images/Distance_And_Angle_02.png "Show Distance And Angle")
+![Show Distance And Angle Demo](https://raw.githubusercontent.com/Mark2Mark/Show-Distance-And-Angle-Of-Nodes/40229b6cd64bca593a2990a9c40e2b355fdc3c42/Images/ShowDistanceAndAngle01.gif "Show Distance And Angle")
 
 
 ##### Known issues
