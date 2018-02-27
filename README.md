@@ -21,11 +21,6 @@ When ever you need it, toggle `Show * Distance and Angle` from the view menu.
 
 ![Show Distance And Angle Demo](https://raw.githubusercontent.com/Mark2Mark/Show-Distance-And-Angle-Of-Nodes/40229b6cd64bca593a2990a9c40e2b355fdc3c42/Images/ShowDistanceAndAngle01.gif "Show Distance And Angle")
 
-
-##### Known issues
-
-- Still trying to find the optimal location of the label.
-
 ##### Pull Requests
 
 Feel free to comment or pull requests for any improvements.
