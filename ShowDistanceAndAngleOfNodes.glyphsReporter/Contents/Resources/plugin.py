@@ -11,7 +11,7 @@
 # 		+ About Relative/Absolute/Shortest angle: https://forum.glyphsapp.com/t/show-distance-and-angle/8176/17
 #
 # - ToDo
-#	- 
+#	-
 #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,7 +39,7 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 	def settings(self):
 		try:
 			self.menuName = u"Distance & Angle"
-			print self.menuName, "Version 1.0.5"
+			# print self.menuName, "Version 1.0.5"
 			self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
 			self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
 
@@ -84,7 +84,7 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				self.angleAbsolute = Glyphs.defaults[ "%s.angleStyle" % self.vID ]
 			except:
 				return False
-			
+
 			return True
 		except:
 			print traceback.format_exc()
@@ -150,14 +150,14 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				xAverage = x1 + (x2-x1) * t
 				yAverage = y1 + (y2-y1) * t
 				dist = math.hypot(x2 - x1, y2 - y1)
-				
+
 
 				# Angle
 				#======
 				# print x2 >= x1 or y2 >= y1
 				switch = (x1, y1) >= (x2, y2)
 
-				
+
 				if switch == True and self.angleAbsolute == False:
 					dx, dy = x1 - x2, y1 - y2
 					#print "switch"
@@ -170,25 +170,25 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 					degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
 				if self.angleAbsolute == False:
 					degs = abs(degs) % 90
-				
+
 				scale = self.getScale()
 				string = NSString.stringWithString_(u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ))
 				attributes = NSString.drawTextAttributes_(NSColor.whiteColor())
 				textSize = string.sizeWithAttributes_(attributes)
-				
+
 				# Badge
 				#======
 				badgeWidth = textSize.width + 8
 				badgeHeight = textSize.height + 4
 				badgeRadius = 5
-				
+
 				unitVector = UnitVectorFromTo(NSPoint(x1, y1), NSPoint(x2, y2))
-				
+
 				badgeOffsetX = -unitVector.y * (badgeWidth / 2 + 4)
 				badgeOffsetY = unitVector.x * (badgeHeight / 2 + 4)
-				
+
 				cpX, cpY = math.floor(xAverage), math.floor(yAverage)
-				
+
 				glyphEditView = self.controller.graphicView()
 				try:
 					selection = glyphEditView.selectedLayerRange()
@@ -197,14 +197,14 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				origin = glyphEditView.cachedPositionAtIndex_(selection.location)
 				cpX = cpX * scale + origin[0]
 				cpY = cpY * scale + origin[1]
-				
+
 				self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius)
 				self.drawText( string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
 
 		except:
 			print traceback.format_exc()
 			pass
-	
+
 	def drawText( self, text, textPosition, fontColor=NSColor.whiteColor() ):
 		try:
 			string = NSString.stringWithString_(text)
@@ -232,8 +232,8 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			return self._scale
 		except:
 			return 1 # Attention, just for debugging!
-	
-	
+
+
 	def logToConsole( self, message ):
 		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
 		NSLog( myLog )
