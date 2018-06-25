@@ -138,6 +138,8 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			print traceback.format_exc()
 
 	def drawNodeDistanceText( self, layer ):
+		if layer is None:
+			return
 		try:
 			try:
 				selection = layer.selection
