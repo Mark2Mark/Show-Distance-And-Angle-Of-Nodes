@@ -3,9 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleDisplayName</key>
-	<string>ShowDistanceAndAngle</string>
+	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>plugin</string>
 	<key>CFBundleIdentifier</key>
@@ -14,25 +12,23 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>ShowDistanceAndAngle</string>
-	<key>CFBundlePackageType</key>
-	<string>BNDL</string>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>5</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.5</string>
+	<string>2.0</string>
 	<key>UpdateFeedURL</key>
 	<string></string>
 	<key>productPageURL</key>
 	<string></string>
 	<key>productReleaseNotes</key>
-	<string>Fix angle calculation</string>
+	<string>Glyphs 3 compatibility</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, by Mark Frömberg (@mark2mark), 2015</string>
 	<key>NSPrincipalClass</key>
 	<string>ShowDistanceAndAngle</string>
 	<key>PyMainFileNames</key>
 	<array>
-		<string>../MacOS/main.py</string>
+		<string>plugin.py</string>
 	</array>
 </dict>
 </plist>

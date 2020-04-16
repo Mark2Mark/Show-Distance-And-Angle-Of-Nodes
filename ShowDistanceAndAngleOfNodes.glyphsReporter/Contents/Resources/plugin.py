@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,11 +20,11 @@
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 from Foundation import NSString
+from AppKit import NSColor, NSBezierPath
 import math
 import traceback
-from AppKit import NSColor, NSBezierPath
 
-
+@objc.python_method
 def UnitVectorFromTo(B, A):
 	A.x -= B.x
 	A.y -= B.y
@@ -34,18 +35,25 @@ def UnitVectorFromTo(B, A):
 
 COLOR = 0, .6, 1, 0.75
 
-class ShowDistanceAndAngle ( ReporterPlugin ):
+class ShowDistanceAndAngle( ReporterPlugin ):
 
+	@objc.python_method
 	def settings(self):
 		try:
-			self.menuName = u"Distance & Angle"
-			# print self.menuName, "Version 1.0.5"
+			self.menuName = Glyphs.localize({
+				'en': "Distance & Angle",
+				'de': 'Abstand & Winkel',
+				'fr': 'distance & angle',
+				'es': 'distancia & angulo',
+			})
+			
+			# print(self.menuName, "Version 1.0.5")
 			self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
 			self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
 
 			self.angleAbsolute = True
 			if not self.LoadPreferences( ):
-				print "Error: Could not load preferences. Will resort to defaults."
+				print("Error: Could not load preferences. Will resort to defaults.")
 
 			self.angleStyles = {
 				"True" : u"= Relative Angle",
@@ -57,8 +65,9 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
 			]
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
+	@objc.python_method
 	def toggleAngleStyle(self):
 		try:
 			self.angleAbsolute = not self.angleAbsolute
@@ -69,17 +78,19 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			self.RefreshView()
 			self.SavePreferences()
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
+	@objc.python_method
 	def SavePreferences( self ):
 		try:
-			Glyphs.defaults[ "%s.angleStyle" % self.vID ] = self.angleAbsolute#self.w.hTarget.get()
+			Glyphs.defaults[ "%s.angleStyle" % self.vID ] = self.angleAbsolute # self.w.hTarget.get()
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
+	@objc.python_method
 	def LoadPreferences( self ):
 		try:
-			Glyphs.registerDefault(  "%s.angleStyle" % self.vID, True ) # Default
+			Glyphs.registerDefault( "%s.angleStyle" % self.vID, True ) # Default
 			try:
 				self.angleAbsolute = Glyphs.defaults[ "%s.angleStyle" % self.vID ]
 			except:
@@ -87,19 +98,19 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 
 			return True
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
+	@objc.python_method
+	def foregroundInViewCoords(self, layer=None):
+		if not layer:
+			layer = self.controller.activeLayer()
+		if layer:
+			try:
+				self.drawNodeDistanceText( layer )
+			except:
+				print(traceback.format_exc())
 
-
-
-
-	def foregroundInViewCoords(self, layer):
-		try:
-			self.drawNodeDistanceText( layer )
-		except:
-			print traceback.format_exc()
-
-
+	@objc.python_method
 	def background(self, layer):
 		try:
 			try:
@@ -109,12 +120,11 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			if len(selection) == 2:
 				x1, y1 = selection[0].x, selection[0].y
 				x2, y2 = selection[1].x, selection[1].y
-				self.drawLine((x1, y1), (x2, y2))
+				self.drawLine(x1, y1, x2, y2)
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
-
-
+	@objc.python_method
 	def drawCoveringBadge(self, x, y, width, height, radius):
 		try:
 			myPath = NSBezierPath.alloc().init()
@@ -124,9 +134,10 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			myPath.appendBezierPath_( thisPath )
 			myPath.fill()
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
-	def drawLine(self, (x1, y1), (x2, y2), strokeWidth=1):
+	@objc.python_method
+	def drawLine(self, x1, y1, x2, y2, strokeWidth=1):
 		try:
 			myPath = NSBezierPath.bezierPath()
 			myPath.moveToPoint_( (x1, y1) )
@@ -135,8 +146,9 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 			NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
 			myPath.stroke()
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
+	@objc.python_method
 	def drawNodeDistanceText( self, layer ):
 		if layer is None:
 			return
@@ -153,16 +165,14 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 				yAverage = y1 + (y2-y1) * t
 				dist = math.hypot(x2 - x1, y2 - y1)
 
-
 				# Angle
 				#======
-				# print x2 >= x1 or y2 >= y1
+				# print(x2 >= x1 or y2 >= y1)
 				switch = (x1, y1) >= (x2, y2)
-
 
 				if switch == True and self.angleAbsolute == False:
 					dx, dy = x1 - x2, y1 - y2
-					#print "switch"
+					#print("switch")
 				else:
 					dx, dy = x2 - x1, y2 - y1
 				rads = math.atan2( dy, dx )
@@ -202,23 +212,21 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 
 				self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius)
 				self.drawText( string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
-
 		except:
-			print traceback.format_exc()
-			pass
+			print(traceback.format_exc())
 
+	@objc.python_method
 	def drawText( self, text, textPosition, fontColor=NSColor.whiteColor() ):
 		try:
 			string = NSString.stringWithString_(text)
 			string.drawAtPoint_color_alignment_(textPosition, fontColor, 4)
 		except:
-			print traceback.format_exc()
-
+			print(traceback.format_exc())
 
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, layer ):
 		return True
 
-
+	@objc.python_method
 	def RefreshView(self):
 		try:
 			Glyphs = NSApplication.sharedApplication()
@@ -228,18 +236,19 @@ class ShowDistanceAndAngle ( ReporterPlugin ):
 		except:
 			pass
 
-
+	@objc.python_method
 	def getScale( self ):
 		try:
 			return self._scale
 		except:
 			return 1 # Attention, just for debugging!
 
-
+	@objc.python_method
 	def logToConsole( self, message ):
 		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
 		NSLog( myLog )
 
-	# def __file__(self):
-	# 	"""Please leave this method unchanged"""
-	# 	return __file__
+	@objc.python_method
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
