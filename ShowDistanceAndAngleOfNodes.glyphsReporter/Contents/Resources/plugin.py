@@ -56,24 +56,23 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 				print("Error: Could not load preferences. Will resort to defaults.")
 
 			self.angleStyles = {
-				"True" : u"= Relative Angle",
-				"False" : u"= Shortest Angle", # Absolute = % 360
+				True : u"= Relative Angle",
+				False : u"= Shortest Angle", # Absolute = % 360
 			}
 
 			self.generalContextMenus = [
 				self.thisMenuTitle,
-				{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
+				{"name": u"%s" % self.angleStyles[bool(self.angleAbsolute)], "action": self.toggleAngleStyle_},
 			]
 		except:
 			print(traceback.format_exc())
 
-	@objc.python_method
-	def toggleAngleStyle(self):
+	def toggleAngleStyle_(self, sender):
 		try:
 			self.angleAbsolute = not self.angleAbsolute
 			self.generalContextMenus = [
 				self.thisMenuTitle,
-				{"name": u"%s" % self.angleStyles[str(self.angleAbsolute)], "action": self.toggleAngleStyle },
+				{"name": u"%s" % self.angleStyles[bool(self.angleAbsolute)], "action": self.toggleAngleStyle_},
 			]
 			self.RefreshView()
 			self.SavePreferences()
