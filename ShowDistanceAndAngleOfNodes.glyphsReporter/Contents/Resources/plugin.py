@@ -35,7 +35,7 @@ def UnitVectorFromTo(B, A):
 
 COLOR = 0, .6, 1, 0.75
 
-class ShowDistanceAndAngle( ReporterPlugin ):
+class ShowDistanceAndAngle(ReporterPlugin):
 
 	@objc.python_method
 	def settings(self):
@@ -52,7 +52,7 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 			self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
 
 			self.angleAbsolute = True
-			if not self.LoadPreferences( ):
+			if not self.LoadPreferences():
 				print("Error: Could not load preferences. Will resort to defaults.")
 
 			self.angleStyles = {
@@ -80,18 +80,18 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 			print(traceback.format_exc())
 
 	@objc.python_method
-	def SavePreferences( self ):
+	def SavePreferences(self):
 		try:
-			Glyphs.defaults[ "%s.angleStyle" % self.vID ] = self.angleAbsolute # self.w.hTarget.get()
+			Glyphs.defaults["%s.angleStyle" % self.vID] = self.angleAbsolute # self.w.hTarget.get()
 		except:
 			print(traceback.format_exc())
 
 	@objc.python_method
-	def LoadPreferences( self ):
+	def LoadPreferences(self):
 		try:
-			Glyphs.registerDefault( "%s.angleStyle" % self.vID, True ) # Default
+			Glyphs.registerDefault("%s.angleStyle" % self.vID, True) # Default
 			try:
-				self.angleAbsolute = Glyphs.defaults[ "%s.angleStyle" % self.vID ]
+				self.angleAbsolute = Glyphs.defaults["%s.angleStyle" % self.vID]
 			except:
 				return False
 
@@ -105,7 +105,7 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 			layer = self.controller.activeLayer()
 		if layer:
 			try:
-				self.drawNodeDistanceText( layer )
+				self.drawNodeDistanceText(layer)
 			except:
 				print(traceback.format_exc())
 
@@ -127,10 +127,10 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 	def drawCoveringBadge(self, x, y, width, height, radius):
 		try:
 			myPath = NSBezierPath.alloc().init()
-			NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
-			myRect = NSRect( ( x, y ), ( width, height ) )
-			thisPath = NSBezierPath.bezierPathWithRoundedRect_cornerRadius_( myRect, radius )
-			myPath.appendBezierPath_( thisPath )
+			NSColor.colorWithCalibratedRed_green_blue_alpha_(*COLOR).set()
+			myRect = NSRect((x, y), (width, height))
+			thisPath = NSBezierPath.bezierPathWithRoundedRect_cornerRadius_(myRect, radius)
+			myPath.appendBezierPath_(thisPath)
 			myPath.fill()
 		except:
 			print(traceback.format_exc())
@@ -139,16 +139,16 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 	def drawLine(self, x1, y1, x2, y2, strokeWidth=1):
 		try:
 			myPath = NSBezierPath.bezierPath()
-			myPath.moveToPoint_( (x1, y1) )
-			myPath.lineToPoint_( (x2, y2) )
-			myPath.setLineWidth_( strokeWidth/self.getScale() )
-			NSColor.colorWithCalibratedRed_green_blue_alpha_( *COLOR ).set()
+			myPath.moveToPoint_((x1, y1))
+			myPath.lineToPoint_((x2, y2))
+			myPath.setLineWidth_(strokeWidth / self.getScale())
+			NSColor.colorWithCalibratedRed_green_blue_alpha_(*COLOR).set()
 			myPath.stroke()
 		except:
 			print(traceback.format_exc())
 
 	@objc.python_method
-	def drawNodeDistanceText( self, layer ):
+	def drawNodeDistanceText(self, layer):
 		if layer is None:
 			return
 		try:
@@ -160,8 +160,8 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 				x1, y1 = selection[0].x, selection[0].y
 				x2, y2 = selection[1].x, selection[1].y
 				t = 0.5 # MIDLLE
-				xAverage = x1 + (x2-x1) * t
-				yAverage = y1 + (y2-y1) * t
+				xAverage = x1 + (x2 - x1) * t
+				yAverage = y1 + (y2 - y1) * t
 				dist = math.hypot(x2 - x1, y2 - y1)
 
 				# Angle
@@ -174,8 +174,8 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 					#print("switch")
 				else:
 					dx, dy = x2 - x1, y2 - y1
-				rads = math.atan2( dy, dx )
-				degs = math.degrees( rads )
+				rads = math.atan2(dy, dx)
+				degs = math.degrees(rads)
 
 				if self.angleAbsolute == True:
 					degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
@@ -183,7 +183,7 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 					degs = abs(degs) % 90
 
 				scale = self.getScale()
-				string = NSString.stringWithString_(u"%s\n%s°" % ( round(dist, 1), round(degs, 1) ))
+				string = NSString.stringWithString_(u"%s\n%s°" % (round(dist, 1), round(degs, 1)))
 				attributes = NSString.drawTextAttributes_(NSColor.whiteColor())
 				textSize = string.sizeWithAttributes_(attributes)
 
@@ -209,20 +209,20 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 				cpX = cpX * scale + origin[0]
 				cpY = cpY * scale + origin[1]
 
-				self.drawCoveringBadge( cpX - badgeWidth/2 - badgeOffsetX, cpY - badgeHeight/2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius)
-				self.drawText( string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
+				self.drawCoveringBadge(cpX - badgeWidth / 2 - badgeOffsetX, cpY - badgeHeight / 2 - badgeOffsetY, badgeWidth, badgeHeight, badgeRadius)
+				self.drawText(string, (cpX - badgeOffsetX, cpY - badgeOffsetY))
 		except:
 			print(traceback.format_exc())
 
 	@objc.python_method
-	def drawText( self, text, textPosition, fontColor=NSColor.whiteColor() ):
+	def drawText(self, text, textPosition, fontColor=NSColor.whiteColor()):
 		try:
 			string = NSString.stringWithString_(text)
 			string.drawAtPoint_color_alignment_(textPosition, fontColor, 4)
 		except:
 			print(traceback.format_exc())
 
-	def needsExtraMainOutlineDrawingForInactiveLayer_( self, layer ):
+	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer):
 		return True
 
 	@objc.python_method
@@ -236,16 +236,16 @@ class ShowDistanceAndAngle( ReporterPlugin ):
 			pass
 
 	@objc.python_method
-	def getScale( self ):
+	def getScale(self):
 		try:
 			return self._scale
 		except:
 			return 1 # Attention, just for debugging!
 
 	@objc.python_method
-	def logToConsole( self, message ):
-		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
-		NSLog( myLog )
+	def logToConsole(self, message):
+		myLog = "Show %s plugin:\n%s" % (self.title(), message)
+		NSLog(myLog)
 
 	@objc.python_method
 	def __file__(self):
