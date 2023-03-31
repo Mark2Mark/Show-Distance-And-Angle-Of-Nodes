@@ -218,7 +218,7 @@ class ShowDistanceAndAngle(ReporterPlugin):
 	def drawText(self, text, textPosition, fontColor=NSColor.whiteColor()):
 		try:
 			string = NSString.stringWithString_(text)
-			string.drawAtPoint_color_alignment_(textPosition, fontColor, 4)
+			string.drawAtPoint_color_alignment_handleSize_(textPosition, fontColor, 4, -1)
 		except:
 			print(traceback.format_exc())
 
