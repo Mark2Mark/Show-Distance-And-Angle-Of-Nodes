@@ -100,9 +100,9 @@ class ShowDistanceAndAngle(ReporterPlugin):
 			print(traceback.format_exc())
 
 	@objc.python_method
-	def foregroundInViewCoords(self):
-
-		layer = self.controller.activeLayer()
+	def foregroundInViewCoords(self, layer=None):
+		if layer is None:
+			layer = self.controller.activeLayer()
 		if layer:
 			try:
 				self.drawNodeDistanceText(layer)
