@@ -47,9 +47,9 @@ class ShowDistanceAndAngle(ReporterPlugin):
 				'fr': 'distance & angle',
 				'es': 'distancia & angulo',
 			})
-			
+
 			# print(self.menuName, "Version 1.0.5")
-			self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None}
+			self.thisMenuTitle = {"name": "%s:" % self.menuName, "action": None}
 			self.vID = "com.markfromberg.ShowDistanceAndAngle"  # vendorID
 
 			self.angleAbsolute = True
