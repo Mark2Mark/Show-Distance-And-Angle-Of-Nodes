@@ -17,11 +17,12 @@ from __future__ import division, print_function, unicode_literals
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-from GlyphsApp import *
-from GlyphsApp.plugins import *
-from Foundation import NSString
+from GlyphsApp import Glyphs
+from GlyphsApp.plugins import ReporterPlugin
+from Foundation import NSString, NSRect, NSPoint, NSLog
 from AppKit import NSColor, NSBezierPath
 import math
+import objc
 import traceback
 
 @objc.python_method
