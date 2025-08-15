@@ -48,16 +48,16 @@ class ShowDistanceAndAngle(ReporterPlugin):
 			})
 			
 			# print(self.menuName, "Version 1.0.5")
-			self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None }
-			self.vID = "com.markfromberg.ShowDistanceAndAngle" # vendorID
+			self.thisMenuTitle = {"name": u"%s:" % self.menuName, "action": None}
+			self.vID = "com.markfromberg.ShowDistanceAndAngle"  # vendorID
 
 			self.angleAbsolute = True
 			if not self.LoadPreferences():
 				print("Error: Could not load preferences. Will resort to defaults.")
 
 			self.angleStyles = {
-				True : u"= Relative Angle",
-				False : u"= Shortest Angle", # Absolute = % 360
+				True: u"= Relative Angle",
+				False: u"= Shortest Angle",  # Absolute = % 360
 			}
 
 			self.generalContextMenus = [
@@ -72,7 +72,7 @@ class ShowDistanceAndAngle(ReporterPlugin):
 			self.angleAbsolute = not self.angleAbsolute
 			self.generalContextMenus = [
 				self.thisMenuTitle,
-				{"name": u"%s" % self.angleStyles[bool(self.angleAbsolute)], "action": self.toggleAngleStyle_},
+				{"name": "%s" % self.angleStyles[bool(self.angleAbsolute)], "action": self.toggleAngleStyle_},
 			]
 			self.RefreshView()
 			self.SavePreferences()
@@ -82,16 +82,16 @@ class ShowDistanceAndAngle(ReporterPlugin):
 	@objc.python_method
 	def SavePreferences(self):
 		try:
-			Glyphs.defaults["%s.angleStyle" % self.vID] = self.angleAbsolute # self.w.hTarget.get()
+			Glyphs.defaults["%s.angleStyle" % self.vID] = self.angleAbsolute  # self.w.hTarget.get()
 		except:
 			print(traceback.format_exc())
 
 	@objc.python_method
 	def LoadPreferences(self):
 		try:
-			Glyphs.registerDefault("%s.angleStyle" % self.vID, True) # Default
+			Glyphs.registerDefault("%s.angleStyle" % self.vID, True)  # Default
 			try:
-				self.angleAbsolute = Glyphs.defaults["%s.angleStyle" % self.vID]
+				self.angleAbsolute = Glyphs.boolDefaults["%s.angleStyle" % self.vID]
 			except:
 				return False
 
@@ -112,10 +112,7 @@ class ShowDistanceAndAngle(ReporterPlugin):
 	@objc.python_method
 	def background(self, layer):
 		try:
-			try:
-				selection = layer.selection
-			except:
-				selection = layer.selection()
+			selection = layer.selection
 			if len(selection) == 2:
 				x1, y1 = selection[0].x, selection[0].y
 				x2, y2 = selection[1].x, selection[1].y
@@ -159,7 +156,7 @@ class ShowDistanceAndAngle(ReporterPlugin):
 			if len(selection) == 2:
 				x1, y1 = selection[0].x, selection[0].y
 				x2, y2 = selection[1].x, selection[1].y
-				t = 0.5 # MIDLLE
+				t = 0.5  # MIDLLE
 				xAverage = x1 + (x2 - x1) * t
 				yAverage = y1 + (y2 - y1) * t
 				dist = math.hypot(x2 - x1, y2 - y1)
@@ -169,7 +166,7 @@ class ShowDistanceAndAngle(ReporterPlugin):
 				# print(x2 >= x1 or y2 >= y1)
 				switch = (x1, y1) >= (x2, y2)
 
-				if switch == True and self.angleAbsolute == False:
+				if switch and not self.angleAbsolute:
 					dx, dy = x1 - x2, y1 - y2
 					#print("switch")
 				else:
@@ -177,9 +174,9 @@ class ShowDistanceAndAngle(ReporterPlugin):
 				rads = math.atan2(dy, dx)
 				degs = math.degrees(rads)
 
-				if self.angleAbsolute == True:
-					degs = degs % 180 # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
-				if self.angleAbsolute == False:
+				if self.angleAbsolute:
+					degs = degs % 180  # Not using 360 here. same angles will have the same number, no matter the path direction of this segment
+				else:
 					degs = abs(degs) % 90
 
 				scale = self.getScale()
@@ -228,19 +225,11 @@ class ShowDistanceAndAngle(ReporterPlugin):
 	@objc.python_method
 	def RefreshView(self):
 		try:
-			Glyphs = NSApplication.sharedApplication()
 			currentTabView = Glyphs.font.currentTab
 			if currentTabView:
 				currentTabView.graphicView().setNeedsDisplay_(True)
 		except:
 			pass
-
-	@objc.python_method
-	def getScale(self):
-		try:
-			return self._scale
-		except:
-			return 1 # Attention, just for debugging!
 
 	@objc.python_method
 	def logToConsole(self, message):
