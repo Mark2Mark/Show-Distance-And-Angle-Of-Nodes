@@ -13,9 +13,9 @@
 	<key>CFBundleName</key>
 	<string>ShowDistanceAndAngle</string>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>9</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.2</string>
+	<string>2.0.3</string>
 	<key>UpdateFeedURL</key>
 	<string></string>
 	<key>productPageURL</key>
